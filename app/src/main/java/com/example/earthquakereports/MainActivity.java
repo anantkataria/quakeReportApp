@@ -2,8 +2,12 @@ package com.example.earthquakereports;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -15,42 +19,36 @@ public class MainActivity extends AppCompatActivity {
      private static final String USGS_REQUEST_URL =
              "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=5&limit=10";
 
+     private wordAdapter adapter;
+     private ListView earthquakeListView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
          super.onCreate(savedInstanceState);
          setContentView(R.layout.activity_main);
 
-//        //fake list of earthquake locations
-//        ArrayList<word> earthquakes = new ArrayList<>();
-//        earthquakes.add(new word("7.2", "San Francisco", "Feb 2, 2016"));
-//        earthquakes.add(new word("7.2", "San Francisco", "Feb 2, 2016"));
-//        earthquakes.add(new word("7.2", "San Francisco", "Feb 2, 2016"));
-//        earthquakes.add(new word("7.2", "San Francisco", "Feb 2, 2016"));
-//        earthquakes.add(new word("7.2", "San Francisco", "Feb 2, 2016"));
-//        earthquakes.add(new word("7.2", "San Francisco", "Feb 2, 2016"));
-//        earthquakes.add(new word("7.2", "San Francisco", "Feb 2, 2016"));
+         earthquakeListView = findViewById(R.id.list);
+         adapter = new wordAdapter(this, new ArrayList<word>());
+         earthquakeListView.setAdapter(adapter);
 
-//         ArrayList<word> earthquakes = QueryUtils.extractEarthquakes();
-//
-//         //a reference to the listview in the layout
-//         ListView earthquakeListView = findViewById(R.id.list);
-//
-//         //create a new ArrayAdapter of earthquakes
-////        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, earthquakes);
-//         wordAdapter adapter = new wordAdapter(this, earthquakes);
-//
-//         //set the adapter on the listview
-//         //so the list can be populated in the user interface
-//         earthquakeListView.setAdapter(adapter);
+         earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+              @Override
+              public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                   word currentEarthquake = adapter.getItem(i);
+                   Uri earthquakeUri = Uri.parse(currentEarthquake.getUrl());
+                   Intent websiteIntent = new Intent(Intent.ACTION_VIEW, earthquakeUri);
+                   startActivity(websiteIntent);
+              }
+         });
 
          quakeAsyncTask task = new quakeAsyncTask();
          task.execute(USGS_REQUEST_URL);
     }
 
-    private class quakeAsyncTask extends AsyncTask<String, Void, ArrayList<word>>{
+    private class quakeAsyncTask extends AsyncTask<String, Void, List<word>>{
 
          @Override
-         protected ArrayList<word> doInBackground(String... urls) {
+         protected List<word> doInBackground(String... urls) {
               if(urls.length < 1 || urls[0] == null )
                    return null;
 
@@ -58,19 +56,13 @@ public class MainActivity extends AppCompatActivity {
          }
 
          @Override
-         protected void onPostExecute(ArrayList<word> earthquakes){
-              if (earthquakes == null) {
-                   return;
+         protected void onPostExecute(List<word> earthquakes){
+              adapter.clear();
+              if (earthquakes != null){
+                   adapter.addAll(earthquakes);
               }
 
-              updateUi(earthquakes);
          }
-    }
-
-    private void updateUi(ArrayList<word> earthquakes){
-         ListView earthquakeListView = findViewById(R.id.list);
-         wordAdapter adapter = new wordAdapter(this, earthquakes);
-         earthquakeListView.setAdapter(adapter);
     }
 
 }

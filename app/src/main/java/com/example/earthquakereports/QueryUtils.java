@@ -50,7 +50,7 @@ public final class QueryUtils {
     private QueryUtils() {
     }
 
-    public static ArrayList<word> fetchEarthquakeData(String USGS_REQUEST_URL){
+    public static List<word> fetchEarthquakeData(String USGS_REQUEST_URL){
 
         URL url = createUrl(USGS_REQUEST_URL);
 
@@ -61,7 +61,7 @@ public final class QueryUtils {
             Log.e(LOG_TAG, "Error closing input stream", e);
         }
 
-        ArrayList<word> earthquakes = QueryUtils.extractEarthquakes(jsonResponse);
+        List<word> earthquakes = QueryUtils.extractEarthquakes(jsonResponse);
 
         return earthquakes;
     }
@@ -131,14 +131,14 @@ public final class QueryUtils {
      * Return a list of {@link word} objects that has been built up from
      * parsing a JSON response.
      */
-    public static ArrayList<word> extractEarthquakes(String jsonResponse) {
+    public static List<word> extractEarthquakes(String jsonResponse) {
 
         if (TextUtils.isEmpty(jsonResponse)) {
             return null;
         }
 
         // Create an empty ArrayList that we can start adding earthquakes to
-        ArrayList<word> earthquakes = new ArrayList<>();
+        List<word> earthquakes = new ArrayList<>();
 
         // Try to parse the SAMPLE_JSON_RESPONSE. If there's a problem with the way the JSON
         // is formatted, a JSONException exception object will be thrown.
@@ -157,7 +157,8 @@ public final class QueryUtils {
                 Log.e("###","MAG IS " + mag);
                 long time = properties.getLong("time");
                 Log.e("###","MAG IS " + mag);
-                word earthQuake = new word(mag, place, time);
+                String url = properties.getString("url");
+                word earthQuake = new word(mag, place, time, url);
                 earthquakes.add(earthQuake);
             }
 

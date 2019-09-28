@@ -4,12 +4,14 @@ class word {
     private double magnitude;
     private String placeAndLandmark;
     private long timeInMilliseconds;
+    private String url;
 
-    word(double mag, String placeAndLandmark, long date){
-        this.magnitude = mag;
-        this.placeAndLandmark = placeAndLandmark;
-        this.timeInMilliseconds = date;
-    }
+     word(double mag, String placeAndLandmark, long date, String url){
+          this.magnitude = mag;
+          this.placeAndLandmark = placeAndLandmark;
+          this.timeInMilliseconds = date;
+          this.url = url;
+     }
 
      double getMagnitude() {
         return magnitude;
@@ -20,4 +22,8 @@ class word {
      long getTimeInMilliseconds() {
         return this.timeInMilliseconds;
     }
+
+     public String getUrl() {
+         return this.url;
+     }
 }
