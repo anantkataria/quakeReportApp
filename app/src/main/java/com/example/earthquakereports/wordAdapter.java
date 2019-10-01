@@ -92,6 +92,7 @@ public class wordAdapter extends ArrayAdapter<word> {
                 break;
             case 3:
                 magnitudeColorResourceId = R.color.magnitude3;
+                break;
             case 4:
                 magnitudeColorResourceId = R.color.magnitude4;
                 break;

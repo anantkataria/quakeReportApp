@@ -71,7 +71,7 @@ public final class QueryUtils {
         try {
             url = new URL(stringUrl);
         } catch (MalformedURLException e){
-
+            e.printStackTrace();
         }
         return url;
     }
@@ -152,11 +152,11 @@ public final class QueryUtils {
                 JSONObject c = responses.getJSONObject(i);
                 JSONObject properties = c.getJSONObject("properties");
                 double mag = properties.getDouble("mag");
-                Log.e("###","MAG IS " + mag);
+                //Log.e("###","MAG IS " + mag);
                 String place = properties.getString("place");
-                Log.e("###","MAG IS " + mag);
+                //Log.e("###","MAG IS " + mag);
                 long time = properties.getLong("time");
-                Log.e("###","MAG IS " + mag);
+                //Log.e("###","MAG IS " + mag);
                 String url = properties.getString("url");
                 word earthQuake = new word(mag, place, time, url);
                 earthquakes.add(earthQuake);
